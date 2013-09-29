@@ -1,3 +1,8 @@
+/*
+Nome: Rafael Ossamu Gouvêa RA: 106905
+Nome: Marcelo Abiarraj RA: 122128
+
+*/
 /* Problema do Papai Noel */
 #include <pthread.h>
 #include <semaphore.h>
