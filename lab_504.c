@@ -147,7 +147,7 @@ void* Renas(void * v){
     acordado = 1;
     return NULL;
   }
-  sleep(2);
+  sleep(3);
   
   pthread_mutex_unlock(&mutex);
   
