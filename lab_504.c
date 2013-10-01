@@ -51,33 +51,30 @@ void logP(){ //papai noel
 } 
 
 void logFim(){
-  if(!lock){
-    lock = 1;
-    
-    system("clear");
-    printf("                    _...\n");
-    printf("              o_.-\"`    `\n");
-    printf("       .--.  _ `'-._.-'\"\"-;     _\n");
-    printf("     .'    \\`_\\_  {_.-a\"a-}  _ / \\ \n");
-    printf("   _/     .-'  '. {c-._o_.){\\|`  |\n");
-    printf("  (@`-._ /       \\{    ^  } \\\\ _/\n");
-    printf("   `~\\  '-._      /'.     }  \\}  .-.\n");
-    printf("     |>:<   '-.__/   '._,} \\_/  / ()) \n ");
-    printf("    |     >:<   `'---. ____'-.|(`\"`\n");
-    printf("     \\            >:<  \\\\_\\\\_\\ | ;\n");
-    printf("      \\                 \\\\-{}-\\/  \\ \n");
-    printf("       \\                 '._\\\\'   /)\n");
-    printf("        '.                       /(\n");
-    printf("          `-._ _____ _ _____ __.'\\ \\ \n");
-    printf("            / \\     / \\     / \\   \\ \\ \n");
-    printf("     jgs _.'/^\\'._.'/^\\'._.'/^\\'.__) \\ \n");
-    printf("     ,=='  `---`   '---'   '---'      )\n");
-    printf("     `\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"`\n");
-
-    getchar();
-    exit(0);
-
-  }
+  lock = 1;
+  
+  system("clear");
+  printf("                    _...\n");
+  printf("              o_.-\"`    `\n");
+  printf("       .--.  _ `'-._.-'\"\"-;     _\n");
+  printf("     .'    \\`_\\_  {_.-a\"a-}  _ / \\ \n");
+  printf("   _/     .-'  '. {c-._o_.){\\|`  |\n");
+  printf("  (@`-._ /       \\{    ^  } \\\\ _/\n");
+  printf("   `~\\  '-._      /'.     }  \\}  .-.\n");
+  printf("     |>:<   '-.__/   '._,} \\_/  / ()) \n ");
+  printf("    |     >:<   `'---. ____'-.|(`\"`\n");
+  printf("     \\            >:<  \\\\_\\\\_\\ | ;\n");
+  printf("      \\                 \\\\-{}-\\/  \\ \n");
+  printf("       \\                 '._\\\\'   /)\n");
+  printf("        '.                       /(\n");
+  printf("          `-._ _____ _ _____ __.'\\ \\ \n");
+  printf("            / \\     / \\     / \\   \\ \\ \n");
+  printf("     jgs _.'/^\\'._.'/^\\'._.'/^\\'.__) \\ \n");
+  printf("     ,=='  `---`   '---'   '---'      )\n");
+  printf("     `\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"`\n");
+  
+  getchar();
+  exit(0);
   
 }
 
@@ -128,7 +125,7 @@ void logE(){ //elfos
     printf("ELFOS: ");for(i=0; i<count_elfos; i++) printf(" & "); putchar(10);putchar(10);
     printf("RENAS: ");for(i=0; i<count_renas; i++) printf(" § "); putchar(10);
     sleep(2);
-    lock =0;
+    lock = 0;
   } 
 } 
 
@@ -142,8 +139,9 @@ void* Renas(void * v){
   count_renas++;
   
   if(count_renas==9){
+    sem_post(&sem_elfos);
     printf("********todas as renas chegaram********\n"); 
-    sleep(2);
+    sleep(1);
     acordado = 1;
     return NULL;
   }
@@ -158,19 +156,18 @@ void* Renas(void * v){
 void * Papai_noel(void* v){  
  
   while(1){
-    while(!acordado) ; 
+    sem_wait(&sem_elfos);
   
     if(count_renas==9){
-      acordado = 1;
-      logFim();
       printf("\tPreparar treno e partir!\n");
+      logFim();
       return NULL;
     }else if(count_elfos==3){
       printf("Acordei! Vou ajudar os elfos!\n");
       while(count_elfos>0 && acordado){
-	if(count_renas==9) break;
-	sleep(2);
-	logP();    
+        if(count_renas==9) break;
+        sleep(2);
+        logP();    
       }
       
       //printf("\tvolta a dormir...\n");
@@ -203,7 +200,7 @@ void * elfoo(void* v){
 }
 
 void Explicacao(){
-  fputs("Elfo= &\nRena= £\n", stdout);
+  fputs("Elfo= &\nRena= §\n", stdout);
   fputs("Papai Noel dormindo= -.-\nPapai Noel acordado= o.o\n\n", stdout);
   fputs("Aperte uma tecla para continuar", stdout);
   getchar();
@@ -262,9 +259,7 @@ int main(){
     pthread_join(rena[i], NULL);
     
 
-    while(1){
-
-      }
+   
   
   return 0;
 }
